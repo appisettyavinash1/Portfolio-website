@@ -123,12 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Color switcher
     const themeBtn = document.getElementById('theme-btn');
     const themes = [
-        { text: '#f4f4f4', hover: '#00e0ff' }, // Default
+        { text: '#f4f4f4', hover: '#00e0ff' }, // Default White
         { text: '#ff5733', hover: '#ff8d72' }, // Coral
         { text: '#33ff57', hover: '#8aff9d' }, // Neon Green
         { text: '#f1c40f', hover: '#f3d354' }, // Sunflower Yellow
         { text: '#e74c3c', hover: '#ed877e' }, // Pomegranate Red
-        { text: '#3498db', hover: '#7fc4e8' }  // Peter River Blue
+        { text: '#3498db', hover: '#7fc4e8' }, // Peter River Blue
+        { text: '#9b59b6', hover: '#c39bd3' }, // Amethyst Purple
+        { text: '#1abc9c', hover: '#76d7c4' }, // Turquoise
+        { text: '#f39c12', hover: '#f8c471' }, // Bright Orange
+        { text: '#e91e63', hover: '#f48fb1' }  // Hot Pink
     ];
     let currentThemeIndex = 0;
 
