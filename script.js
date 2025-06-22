@@ -120,6 +120,28 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
     animate();
 
+    // Color switcher
+    const themeBtn = document.getElementById('theme-btn');
+    const themes = [
+        { text: '#f4f4f4', hover: '#00e0ff' }, // Default
+        { text: '#ff5733', hover: '#ff8d72' }, // Coral
+        { text: '#33ff57', hover: '#8aff9d' }, // Neon Green
+        { text: '#f1c40f', hover: '#f3d354' }, // Sunflower Yellow
+        { text: '#e74c3c', hover: '#ed877e' }, // Pomegranate Red
+        { text: '#3498db', hover: '#7fc4e8' }  // Peter River Blue
+    ];
+    let currentThemeIndex = 0;
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const newTheme = themes[currentThemeIndex];
+            document.documentElement.style.setProperty('--text-color', newTheme.text);
+            document.documentElement.style.setProperty('--icon-hover-color', newTheme.hover);
+        });
+    }
+
     // Floating Action Buttons
     const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
     const shareBtn = document.getElementById('share-btn');

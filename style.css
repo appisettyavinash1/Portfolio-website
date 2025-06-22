@@ -149,6 +149,7 @@ h1, h2 {
 .floating-action-buttons a:nth-child(2) { animation-delay: 0.2s; }
 .floating-action-buttons a:nth-child(3) { animation-delay: 0.3s; }
 .floating-action-buttons a:nth-child(4) { animation-delay: 0.4s; }
+.floating-action-buttons a:nth-child(5) { animation-delay: 0.5s; }
 
 .fab-icon:hover {
     background-color: #fff;
@@ -169,7 +170,7 @@ footer {
     text-align: center;
     padding: 1rem 0;
     background-color: transparent !important;
-    color: #fff;
+    color: var(--text-color);
     position: relative;
     z-index: 1;
 }
