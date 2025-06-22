@@ -2,13 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('background-animation');
     if (!container) return;
 
-    let scene, camera, renderer, stars, controls, atomium;
+    let scene, camera, renderer, controls, atomiumGrid;
+    const spacing = 50; // Distance between Atomiums
 
     function init() {
         // Scene setup
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-        camera.position.z = 30;
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.z = 80;
 
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -22,28 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         controls.dampingFactor = 0.05;
 
         // Lighting
-        scene.add(new THREE.AmbientLight(0xcccccc));
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(1, 1, 1);
+        scene.add(new THREE.AmbientLight(0x404040));
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        directionalLight.position.set(0.5, 1, 1);
         scene.add(directionalLight);
 
-        // Starfield
-        const starVertices = [];
-        for (let i = 0; i < 15000; i++) {
-            const x = (Math.random() - 0.5) * 2000;
-            const y = (Math.random() - 0.5) * 2000;
-            const z = (Math.random() - 0.5) * 2000;
-            starVertices.push(x, y, z);
-        }
-        const starGeometry = new THREE.BufferGeometry();
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
-        stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
-        
-        // Atomium
-        atomium = createAtomium();
-        scene.add(atomium);
+        // Atomium Lattice
+        atomiumGrid = createAtomiumLattice();
+        scene.add(atomiumGrid);
 
         window.addEventListener('resize', onWindowResize, false);
     }
@@ -94,6 +81,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return atomiumGroup;
     }
 
+    function createAtomiumLattice() {
+        const lattice = new THREE.Group();
+        const baseAtomium = createAtomium();
+        const gridSize = 4; // Creates a grid of gridSize x gridSize x gridSize
+
+        for (let i = -gridSize / 2; i <= gridSize / 2; i++) {
+            for (let j = -gridSize / 2; j <= gridSize / 2; j++) {
+                for (let k = -gridSize / 2; k <= gridSize / 2; k++) {
+                    const atomiumClone = baseAtomium.clone();
+                    atomiumClone.position.set(i * spacing, j * spacing, k * spacing);
+                    lattice.add(atomiumClone);
+                }
+            }
+        }
+        return lattice;
+    }
+
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -103,16 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function animate() {
         requestAnimationFrame(animate);
 
-        stars.position.z += 0.2;
-        if (stars.position.z > 1000) {
-            stars.position.z = -1000;
+        // Loop the lattice
+        atomiumGrid.position.z += 0.05;
+        if (atomiumGrid.position.z >= spacing) {
+            atomiumGrid.position.z = 0;
         }
 
-        if (atomium) {
-            atomium.rotation.y += 0.001;
-            atomium.rotation.x += 0.0005;
-        }
-        
         controls.update();
         renderer.render(scene, camera);
     }
@@ -134,10 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scrollToTopBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     if(shareBtn) {
@@ -151,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 if (navigator.share) {
                     await navigator.share(shareData);
-                    console.log('Shared successfully');
                 } else {
                     navigator.clipboard.writeText(window.location.href);
                     alert('Link copied to clipboard!');
