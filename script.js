@@ -2,38 +2,96 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('background-animation');
     if (!container) return;
 
-    let scene, camera, renderer, stars;
+    let scene, camera, renderer, stars, controls, atomium;
 
     function init() {
+        // Scene setup
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-        camera.position.z = 1;
+        camera.position.z = 30;
 
-        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
+        // Controls
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Lighting
+        scene.add(new THREE.AmbientLight(0xcccccc));
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // Starfield
         const starVertices = [];
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 15000; i++) {
             const x = (Math.random() - 0.5) * 2000;
             const y = (Math.random() - 0.5) * 2000;
             const z = (Math.random() - 0.5) * 2000;
             starVertices.push(x, y, z);
         }
-
         const starGeometry = new THREE.BufferGeometry();
         starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-
-        const starMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.7
-        });
-
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
         stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
+        
+        // Atomium
+        atomium = createAtomium();
+        scene.add(atomium);
 
         window.addEventListener('resize', onWindowResize, false);
-        document.addEventListener('mousemove', onMouseMove, false);
+    }
+
+    function createAtomium() {
+        const atomiumGroup = new THREE.Group();
+        const sphereRadius = 1.2;
+        const tubeRadius = 0.2;
+        const halfSide = 7;
+
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xc0c0c0,
+            metalness: 0.9,
+            roughness: 0.2,
+        });
+
+        const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 32, 32);
+
+        function createTube(p1, p2) {
+            const path = new THREE.LineCurve3(p1, p2);
+            const tubeGeometry = new THREE.TubeGeometry(path, 1, tubeRadius, 16, false);
+            return new THREE.Mesh(tubeGeometry, material);
+        }
+
+        const cornerPositions = [
+            new THREE.Vector3(halfSide, halfSide, halfSide), new THREE.Vector3(halfSide, halfSide, -halfSide),
+            new THREE.Vector3(halfSide, -halfSide, halfSide), new THREE.Vector3(halfSide, -halfSide, -halfSide),
+            new THREE.Vector3(-halfSide, halfSide, halfSide), new THREE.Vector3(-halfSide, halfSide, -halfSide),
+            new THREE.Vector3(-halfSide, -halfSide, halfSide), new THREE.Vector3(-halfSide, -halfSide, -halfSide)
+        ];
+        const allPositions = [new THREE.Vector3(0, 0, 0), ...cornerPositions];
+
+        allPositions.forEach(pos => {
+            const sphere = new THREE.Mesh(sphereGeometry, material);
+            sphere.position.copy(pos);
+            atomiumGroup.add(sphere);
+        });
+
+        const edgeConnections = [
+            [0, 1], [0, 2], [0, 4], [1, 3], [1, 5], [2, 3], [2, 6], [3, 7], [4, 5], [4, 6], [5, 7], [6, 7]
+        ];
+
+        edgeConnections.forEach(pair => {
+            const tube = createTube(cornerPositions[pair[0]], cornerPositions[pair[1]]);
+            atomiumGroup.add(tube);
+        });
+
+        return atomiumGroup;
     }
 
     function onWindowResize() {
@@ -42,22 +100,20 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    function onMouseMove(event) {
-        const mouseX = event.clientX - window.innerWidth / 2;
-        const mouseY = event.clientY - window.innerHeight / 2;
-        stars.rotation.y = mouseX * 0.00005;
-        stars.rotation.x = mouseY * 0.00005;
-    }
-
     function animate() {
         requestAnimationFrame(animate);
 
         stars.position.z += 0.2;
-
         if (stars.position.z > 1000) {
             stars.position.z = -1000;
         }
 
+        if (atomium) {
+            atomium.rotation.y += 0.001;
+            atomium.rotation.x += 0.0005;
+        }
+        
+        controls.update();
         renderer.render(scene, camera);
     }
 
@@ -97,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     await navigator.share(shareData);
                     console.log('Shared successfully');
                 } else {
-                    // Fallback for browsers that don't support Web Share API
                     navigator.clipboard.writeText(window.location.href);
                     alert('Link copied to clipboard!');
                 }
