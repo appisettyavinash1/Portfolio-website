@@ -1,10 +1,15 @@
+:root {
+    --text-color: #f4f4f4;
+    --icon-hover-color: #00e0ff;
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: #000;
-    color: #f4f4f4;
+    color: var(--text-color);
 }
 
 #background-animation {
@@ -18,7 +23,7 @@ body {
 
 header {
     background: transparent;
-    color: #fff;
+    color: var(--text-color);
     padding: 1rem 0;
     position: relative;
     width: 100%;
@@ -39,7 +44,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff;
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -78,10 +83,10 @@ h1, h2 {
 }
 
 .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 1rem;
-    text-align: center;
 }
 
 .skill-item {
@@ -100,16 +105,17 @@ h1, h2 {
 .social-links a {
     font-size: 2rem;
     margin: 0 0.5rem;
-    color: #f4f4f4;
+    color: var(--text-color);
     transition: color 0.3s;
 }
 
 .social-links a:hover {
-    color: #00e0ff;
+    color: var(--icon-hover-color);
 }
 
 .fa-snapchat-ghost:hover {
     color: #FFFC00; /* Snapchat yellow */
+    animation: pop-in 0.5s forwards;
 }
 
 .floating-action-buttons {
