@@ -93,6 +93,53 @@ h1, h2 {
     color: #00e0ff;
 }
 
+.floating-action-buttons {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+
+.fab-icon {
+    background-color: #00e0ff;
+    color: #1a1a1a;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    transform: scale(0);
+    animation: pop-in 0.5s forwards;
+}
+
+.floating-action-buttons a:nth-child(1) { animation-delay: 0.1s; }
+.floating-action-buttons a:nth-child(2) { animation-delay: 0.2s; }
+.floating-action-buttons a:nth-child(3) { animation-delay: 0.3s; }
+.floating-action-buttons a:nth-child(4) { animation-delay: 0.4s; }
+
+.fab-icon:hover {
+    background-color: #fff;
+    transform: scale(1.1) rotate(10deg);
+}
+
+#scroll-to-top-btn {
+    display: none; /* Initially hidden */
+}
+
+@keyframes pop-in {
+    to {
+        transform: scale(1);
+    }
+}
+
 footer {
     text-align: center;
     padding: 1rem 0;

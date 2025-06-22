@@ -63,4 +63,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     init();
     animate();
+
+    // Floating Action Buttons
+    const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+    const shareBtn = document.getElementById('share-btn');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollToTopBtn.style.display = 'flex';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+
+    scrollToTopBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    if(shareBtn) {
+        shareBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const shareData = {
+                title: 'My Portfolio',
+                text: 'Check out my portfolio!',
+                url: window.location.href
+            };
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    console.log('Shared successfully');
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('Link copied to clipboard!');
+                }
+            } catch (err) {
+                console.error('Error sharing:', err);
+            }
+        });
+    }
 });
