@@ -5,6 +5,7 @@ body {
     box-sizing: border-box;
     background-color: #000;
     color: #f4f4f4;
+    text-shadow: 0 0 7px rgba(0, 0, 0, 0.9);
 }
 
 #background-animation {
@@ -17,13 +18,13 @@ body {
 }
 
 header {
-    background: rgba(26, 26, 26, 0.7);
+    background: transparent;
     color: #fff;
     padding: 1rem 0;
     position: relative;
     width: 100%;
     top: 0;
-    z-index: 1000;
+    z-index: 1;
 }
 
 nav ul {
@@ -52,8 +53,8 @@ main {
 section {
     padding: 2rem;
     margin-bottom: 2rem;
-    background: rgba(26, 26, 26, 0.5);
-    border-radius: 8px;
+    background: transparent;
+    border-radius: 0;
 }
 
 section:last-of-type {
@@ -71,15 +72,16 @@ h1, h2 {
 }
 
 .project-item {
-    background: rgba(34, 34, 34, 0.7);
+    background: transparent;
     padding: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
 }
 
 .social-links {
     text-align: center;
     margin-top: 1rem;
+    transform: scale(1);
 }
 
 .social-links a {
@@ -147,7 +149,7 @@ h1, h2 {
 footer {
     text-align: center;
     padding: 1rem 0;
-    background: rgba(26, 26, 26, 0.7);
+    background: transparent;
     color: #fff;
     position: relative;
     z-index: 1;
