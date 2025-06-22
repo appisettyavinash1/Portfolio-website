@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const halfSide = 7;
 
         const material = new THREE.MeshStandardMaterial({
-            color: 0xc0c0c0,
-            metalness: 0.9,
-            roughness: 0.2,
+            color: 0xaaaaaa, // Steel-like color
+            metalness: 1.0,
+            roughness: 0.3,
         });
 
         const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 32, 32);
