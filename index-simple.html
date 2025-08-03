@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="background-animation"></div>
     <header>
         <nav>
             <ul>
@@ -129,9 +128,44 @@
         <p>&copy; 2025 Appisetty Avinash. All rights reserved.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Simple theme switcher without complex dependencies
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.getElementById('theme-btn');
+            const themes = [
+                { text: '#f4f4f4', hover: '#00e0ff' },
+                { text: '#ff5733', hover: '#ff8d72' },
+                { text: '#33ff57', hover: '#8aff9d' },
+                { text: '#f1c40f', hover: '#f3d354' },
+                { text: '#e74c3c', hover: '#ed877e' }
+            ];
+            let currentThemeIndex = 0;
+
+            if (themeBtn) {
+                themeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                    const newTheme = themes[currentThemeIndex];
+                    document.documentElement.style.setProperty('--text-color', newTheme.text);
+                    document.documentElement.style.setProperty('--icon-hover-color', newTheme.hover);
+                });
+            }
+
+            // Scroll to top functionality
+            const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.style.display = 'flex';
+                } else {
+                    scrollToTopBtn.style.display = 'none';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
 </body>
-</html>
+</html> 
